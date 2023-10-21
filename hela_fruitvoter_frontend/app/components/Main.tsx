@@ -200,6 +200,7 @@ const Main = () => {
 								color="secondary"
 								size="large"
 								onClick={handleSumbitVote}
+								disabled={processVote}
 							>
 								{!processVote ? (
 									<div>
@@ -213,7 +214,7 @@ const Main = () => {
 										>
 											...
 										</svg>
-										Voting....
+										Voting Please wait....
 									</div>
 								)}
 							</Button>
@@ -268,7 +269,7 @@ const Main = () => {
 										>
 											...
 										</svg>
-										Processing Vote Result...
+										Processing Vote Result please wait...
 									</div>
 								)}
 							</Button>
