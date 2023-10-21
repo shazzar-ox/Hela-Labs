@@ -73,7 +73,7 @@ const Main = () => {
 			const submitVote = async () => {
 				try {
 					const response = await axios.post(
-						"https://server-6f0h.onrender.com/api/v1/fruits/vote",
+						"https://helaserver.onrender.com/api/v1/fruits/vote",
 						voteFruit
 					);
 
@@ -146,7 +146,7 @@ const Main = () => {
 			setCheckResult(true);
 			try {
 				const response = await axios.post(
-					"https://server-6f0h.onrender.com/api/v1/fruits/getvote",
+					"https://helaserver.onrender.com/api/v1/fruits/getvote",
 					getFruit
 				);
 				const info = `What do we have here!!!! ${response.data.data.data} has ${response.data.data.vote} votes`;
