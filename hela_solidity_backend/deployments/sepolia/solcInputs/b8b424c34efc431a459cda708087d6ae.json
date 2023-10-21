@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Fruity.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ~0.8.20;\n    /**\n    * @author <a href=\"mailto:emmanuelmayowa95@gmail.com\">Mayowa</a>\n    * @dev contract to vote for fruits,\n    */\ncontract FruitVoting {\n    mapping (string fruitnames => uint voteCount) private s_fruitInfo ;\n    constructor() {\n        \n    }\n\n    //  accepts the name of the fruit and increases vot by one\n    function voteForFruit(string memory _fruit) public  {\n        uint fruitScore = s_fruitInfo[_fruit];\n        if(fruitScore <=0)\n        {\n            fruitScore =1;\n        } \n        else {\n            fruitScore +=1;\n            \n        }\n        s_fruitInfo[_fruit] = fruitScore;\n     }\n\n    // function to retun the vote count of a fruit\n    function getVotes (string memory _fruit) public  view returns(uint){\n        return s_fruitInfo[_fruit] ;\n    }\n    \n}"
+    }
+  },
+  "settings": {
+    "evmVersion": "paris",
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
