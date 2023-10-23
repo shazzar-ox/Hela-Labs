@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useAccount, useConnect, useBalance, useNetwork } from "wagmi";
 import { useSignMessage } from "wagmi";
 import { useNotification, NotificationProvider } from "@web3uikit/core";
-// const { useNotification, NotificationProvider } = require("@web3uikit/core");
 import { BsFillBellFill } from "react-icons/bs";
 import * as React from "react";
 import InputLabel from "@mui/material/InputLabel";
@@ -21,6 +20,7 @@ import {
 } from "react-icons/gi";
 import { GrView } from "react-icons/gr";
 import axios from "axios";
+
 const Main = () => {
 	const [voteFruit, setVoteFruit] = useState({
 		fruit: "",
@@ -35,7 +35,8 @@ const Main = () => {
 	const [displaypage, setDisplayPage] = useState(false);
 	const { address, isConnected, isConnecting } = useAccount();
 	const { chain, chains } = useNetwork();
-	const dispatch = useNotification();
+	const dispatch = useNotification(); // tool to handle all notifications...
+
 	const handleNewNotification = (msg: string, type: string) => {
 		dispatch({
 			type: type,
@@ -45,15 +46,18 @@ const Main = () => {
 			icon: <BsFillBellFill />,
 		});
 	};
+
+	// hook to monitor if user signed into metamask
 	const {
 		data,
 		isError: signedError,
 		isSuccess: signedSuccess,
 		signMessage,
 	} = useSignMessage({
-		message: `Hello fren you are about to vote for ${voteFruit.fruit} Click sign in to Vote`,
+		message: `Hello fren you are about to vote for ${voteFruit.fruit} Click SIGN to  cast Vote`,
 	});
 
+	// update state of the chainID once wallet is connected...
 	useEffect(() => {
 		if (isConnected) {
 			setVoteFruit((prev: any) => {
@@ -68,6 +72,7 @@ const Main = () => {
 		}
 	}, [isConnected, isConnecting]);
 
+	// automatically makes a vote once the user has signed in in successfully
 	useEffect(() => {
 		if (signedSuccess) {
 			const submitVote = async () => {
@@ -100,7 +105,7 @@ const Main = () => {
 		}
 	}, [signedSuccess, signedError]);
 
-	// handle select option to cast avote
+	// handle select option to store input value when a user selects a fruit to vote
 	const handleVote = (event: any) => {
 		const { name, value } = event.target;
 		console.log(value);
@@ -109,7 +114,7 @@ const Main = () => {
 		});
 	};
 
-	// handle select option to cast avote
+	// handle select option to store input value when a user selects a fruit to get vote count
 	const handleGetVote = (event: any) => {
 		const { name, value } = event.target;
 		setGetFruit((prev) => {
@@ -119,7 +124,6 @@ const Main = () => {
 
 	// function to vote
 	const handleSumbitVote = async (event: any) => {
-		console.log(voteFruit.fruit);
 		event.preventDefault();
 		{
 			!isConnected && (
@@ -143,21 +147,18 @@ const Main = () => {
 		if (getFruit.fruit == "") {
 			handleNewNotification("what Fruit?", "error");
 		} else {
-			setCheckResult(true);
+			setCheckResult(true); //changes the state of the check vote button to processing...
 			try {
 				const response = await axios.post(
 					"https://helaserver.onrender.com/api/v1/fruits/getvote",
 					getFruit
 				);
 				const info = `What do we have here!!!! ${response.data.data.data} has ${response.data.data.vote} votes`;
-				handleNewNotification(info, "success");
-				console.log(response.data.data.data);
-				setCheckResult(false);
+				handleNewNotification(info, "success"); // dispaly the result as a notification
+				setCheckResult(false); //changes the state of the check vote button  back to vote...
 			} catch (err: any) {
-				console.log(err);
-				setCheckResult(false);
-
-				handleNewNotification(err.message, "error");
+				setCheckResult(false); //changes the state of the check vote button back to vote...
+				handleNewNotification(err.message, "error"); // dispaly the result as a notification
 			}
 		}
 	};
@@ -165,6 +166,7 @@ const Main = () => {
 	return (
 		<>
 			{displaypage && (
+				// vote form...
 				<div className="lg:flex" style={{ margin: "0 auto", width: "50%" }}>
 					<div>
 						<FormControl sx={{ m: 1, minWidth: 250 }}>
@@ -200,21 +202,17 @@ const Main = () => {
 								color="secondary"
 								size="large"
 								onClick={handleSumbitVote}
-								disabled={processVote}
+								disabled={processVote} // when a fecth result has been initiated the button disables...
 							>
 								{!processVote ? (
 									<div>
 										Vote <GiVote />
 									</div>
 								) : (
-									<div>
-										<svg
-											className="animate-spin h-5 w-5 mr-3 ..."
-											viewBox="0 0 64 64"
-										>
-											...
-										</svg>
-										Voting Please wait....
+									<div className="flex gap-2">
+										<div className="spinner-container"></div>
+										<div className="spinner border-t-4 border-blue-500 border-solid h-4 w-4 rounded-full animate-spin"></div>
+										Voting please wait...
 									</div>
 								)}
 							</Button>
@@ -254,7 +252,7 @@ const Main = () => {
 							<Button
 								variant="contained"
 								size="large"
-								disabled={checkResult}
+								disabled={checkResult} // when a fecth result has been initiated the button disables...
 								onClick={checkVote}
 							>
 								{!checkResult ? (
@@ -262,14 +260,10 @@ const Main = () => {
 										View Result <GrView />
 									</div>
 								) : (
-									<div>
-										<svg
-											className="animate-spin h-5 w-5 mr-3 ..."
-											viewBox="0 0 64 64"
-										>
-											...
-										</svg>
-										Processing Vote Result please wait...
+									<div className="flex gap-2">
+										<div className="spinner-container"></div>
+										<div className="spinner border-t-4 border-blue-500 border-solid h-4 w-4 rounded-full animate-spin"></div>
+										Processing Vote please wait...
 									</div>
 								)}
 							</Button>
@@ -278,14 +272,14 @@ const Main = () => {
 				</div>
 			)}
 
-			{/* display this inof when wallet is not connected */}
+			{/* display this info when wallet is not connected */}
 			{!displaypage && (
 				<div>
 					<h2
 						className="subpixel-antialiased"
 						style={{ margin: "0 auto", width: "60%" }}
 					>
-						Connect Wallet to Access Vote platform....
+						Connect Wallet to Access Voting System....
 					</h2>
 				</div>
 			)}

@@ -1,12 +1,8 @@
-// const router = require("express").Router();
 import express from "express"
 const router = express.Router()
-// const {
-// voter, result
-// } = require("../controllers/manage_fruits")
-import { result, voter } from "../controllers/manage_fruits.js"
-router.route('/getvote').post(result)
-router.route('/vote').post(voter)
 
-// module.exports = router
+import { result, voter } from "../controllers/manage_fruits.js"
+router.route('/getvote').post(result) // route to get fruit vote
+router.route('/vote').post(voter) // route to vote for a fruit
+
 export { router }

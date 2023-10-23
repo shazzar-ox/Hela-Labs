@@ -21,7 +21,7 @@ const { chains, publicClient } = configureChains(
 	[walletConnectProvider({ projectId }), publicProvider()]
 );
 
-const metadata = {
+const metadata= {
 	name: "Web3Modal",
 	description: "Web3Modal Example",
 	url: "https://web3modal.com",
